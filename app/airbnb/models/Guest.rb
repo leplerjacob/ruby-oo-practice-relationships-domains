@@ -1,53 +1,58 @@
 class Guest
-
+    attr_accessor :name
     @@all_guests = []
-
-    # not needed
-    # def initialize
-    # end
     
-    def self.new_guest(guest)
+    def self.new_guest(name)
+        @@all_guests << guest = self.new
+        guest.add_name(name)
+        guest
+    end
+
+    def add_name(name)
         @name = name
-        @@all_guests << self
     end
 
     def self.all
         @@all_guests
     end
-
+    
     def self.pro_traveller
-        # returns an array of all guests who have made over 1 trip
+        #DONE
+        # <Class>.pro_traveller: returns an array of all guests who have made over 1 trip
+        @@all_guests.collect{|guest| 
+            if Trip.all.select{|trip| trip.guest == guest}.count > 1
+                guest
+            end
+        }.compact!
     end
-
+    
+    
     def self.find_all_by_name(name)
-        # takes an argument of a name (as a string), returns all guests with that name
+        # DONE
+        # <Class>.find_all_by_name(name):  takes an argument of a name (as a string), returns the all guests with that name
+        @@all_guests.select{|guest| guest.name == name }
     end
 
-    # When guest is added to listing, call this method from Listing Class
     def add_listing(listing)
+        # When guest is added to listing, call this method from Listing Class
         @listing = listing        
     end
 
     def listings
+        # DONE
         # returns an array of all listings a guest has stayed at
-        # Calls Listing.<method>
+        Trip.all.select{|trip| trip.guest == self}.map{|trip| trip.listing}
     end
 
     def trips
+        #DONE
         # returns an array of all trips a guest has made
+        Trip.all.select{|trip| trip.guest.name == self.name}
     end
 
     def trip_count
+        # DONE
         # returns the number of trips a guest has taken
+        Trip.all.select{|trip| trip.guest == self}.count
     end
 end
-
-# Methods called by instance
-# <instance>.listings: returns an array of all listings a guest has stayed at
-# <instance>.trips: returns an array of all trips a guest has made
-# <instance>.trip_count: returns the number of trips a guest has taken
-
-# Methods called by Class
-# DONE <Class>.all: returns an array of all guests
-# <Class>.pro_traveller: returns an array of all guests who have made over 1 trip
-# <Class>.find_all_by_name(name):  takes an argument of a name (as a string), returns the all guests with that name
